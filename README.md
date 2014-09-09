@@ -16,4 +16,4 @@ cd /path/to/project/.git/hooks/ && /RELATIVE/PATH/to/clementine-git-hooks/pre-co
 
 __Remarque__
 Lors de la création du lien symbolique, il est important que le chemin soit relatif au dossier .git/hooks ! Il semble que git évalue le lien symbolique depuis l'intérieur du dossier .git/hooks 
-[Source](cf. http://stackoverflow.com/questions/4592838/symbolic-link-to-a-hook-in-git)
+[Source(cf. http://stackoverflow.com/questions/4592838/symbolic-link-to-a-hook-in-git)]

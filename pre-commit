@@ -28,14 +28,14 @@ if [ "$allowutf8bominphp" != "true" ] &&
 	# Note that the use of brackets around a tr range is ok here, (it's
 	# even required, for portability to Solaris 10's /usr/bin/tr), since
 	# the square bracket bytes happen to fall in the designated range.
-    test $(grep -ch $'\xEF\xBB\xBF' $(git diff --cached --name-only) | 
+    test $(head -c 3 $(git diff --cached --name-only) | xxd -p | grep -c 'efbbbf' | 
         awk '{ sum += $1; } END { print sum; }' "$@") != 0
 then
 	cat <<\EOF
 Error: Attempt to add a PHP file with UTF-8 BOM
 
 This can cause problems. To see the list of PHP files with BOM try: 
-  find . -name '*.php' -exec grep -lI $'\xEF\xBB\xBF' {} \;
+  find . -iname '*.php' -exec grep -lI $'\xEF\xBB\xBF' {} \;
 
 If you know what you are doing you can disable this check using:
 

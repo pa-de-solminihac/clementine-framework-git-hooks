@@ -1,5 +1,5 @@
-clementine-framework-git-hooks
-==============================
+Clementine framework : git-hooks
+===
 
 Git hooks to enforce best practices.
 

@@ -15,19 +15,12 @@ else
 	against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
 fi
 
-# If you want to allow UTF-8 BOM in PHP files set this variable to true.
-allowutf8bominphp=$(git config --bool hooks.allowutf8bominphp)
-
 # Redirect output to stderr.
 exec 1>&2
 
-# Cross platform projects tend to avoid non-ASCII filenames; prevent
-# them from being added to the repository. We exploit the fact that the
-# printable range starts at the space character and ends with tilde.
+# If you want to allow UTF-8 BOM in PHP files set this variable to true.
+allowutf8bominphp=$(git config --bool hooks.allowutf8bominphp)
 if [ "$allowutf8bominphp" != "true" ] &&
-	# Note that the use of brackets around a tr range is ok here, (it's
-	# even required, for portability to Solaris 10's /usr/bin/tr), since
-	# the square bracket bytes happen to fall in the designated range.
     test $(head -c 3 $(git diff --cached --name-only) | xxd -p | grep -c 'efbbbf' | 
         awk '{ sum += $1; } END { print sum; }' "$@") != 0
 then
@@ -37,12 +30,31 @@ Error: Attempt to add a PHP file with UTF-8 BOM
 This can cause problems. To see the list of PHP files with BOM try: 
   find . -iname '*.php' -exec grep -lI $'\xEF\xBB\xBF' {} \;
 
-If you know what you are doing you can disable this check using:
+You can disable this check by setting the following in the [hooks] section of your git config file:
+  allowutf8bominphp=true
 
-  git config hooks.allowutf8bominphp true
 EOF
 	exit 1
 fi
 
-# If there are whitespace errors, print the offending file names and fail.
-exec git diff-index --check --cached $against -- | grep '\.php:'
+# If you want to allow trailing whitespaces in PHP files set this variable to true.
+allowtrailingwhitespacesinphp=$(git config --bool hooks.allowtrailingwhitespacesinphp)
+if [ "$allowtrailingwhitespacesinphp" != "true" ] &&
+    test "$(git diff-index --check --cached $against -- | grep '\.php:')"
+then
+	cat <<\EOF
+Error: Attempt to commit a PHP file with a trailing whitespace
+
+This can cause problems. To see the list of PHP files with a trailing whitespace try: 
+EOF
+
+    echo "  git diff-index --check --cached $against -- | grep '\.php:' "
+
+	cat <<\EOF
+
+You can disable this check by setting the following in the [hooks] section of your git config file:
+  allowtrailingwhitespacesinphp=true
+
+EOF
+	exit 1
+fi

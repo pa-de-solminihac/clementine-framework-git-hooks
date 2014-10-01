@@ -21,13 +21,13 @@ exec 1>&2
 # If you want to allow UTF-8 BOM in PHP files set this variable to true.
 allowutf8bominphp=$(git config --bool hooks.allowutf8bominphp)
 if [ "$allowutf8bominphp" != "true" ] &&
-    test $(head -c 3 $(git diff --cached --name-only) | xxd -p | grep -c 'efbbbf' | 
+    test $(head -c 3 $(git diff --cached --name-only) | xxd -p | grep -c 'efbbbf' |
         awk '{ sum += $1; } END { print sum; }' "$@") != 0
 then
 	cat <<\EOF
 Error: Attempt to add a PHP file with UTF-8 BOM
 
-This can cause problems. To see the list of PHP files with BOM try: 
+This can cause problems. To see the list of PHP files with BOM try:
   find . -iname '*.php' -exec grep -lI $'\xEF\xBB\xBF' {} \;
 
 You can disable this check by setting the following in the [hooks] section of your git config file:
@@ -43,9 +43,9 @@ if [ "$allowtrailingwhitespacesinphp" != "true" ] &&
     test "$(git diff-index --check --cached $against -- | grep '\.php:')"
 then
 	cat <<\EOF
-Error: Attempt to commit a PHP file with a trailing whitespace
+Error: Attempt to commit a PHP file with trailing whitespace (maybe wrong file format?)
 
-This can cause problems. To see the list of PHP files with a trailing whitespace try: 
+This can cause problems. To see the list of PHP files with trailing whitespaces try:
 EOF
 
     echo "  git diff-index --check --cached $against -- | grep '\.php:' "

@@ -1,13 +1,13 @@
 Clementine framework : git-hooks
 ===
 
-Git hooks to enforce best practices.
+Hooks Git pour éviter quelques erreurs de base
 
 __pre-commit__
 
-A simple hook to forbid committing UTF8-with-BOM PHP files.
+Un simple hook pour éviter d'envoyer des fichiers UTF8 avec BOM PHP.
 
-Install
+Installation
 ---
 
 ```
